@@ -21,23 +21,23 @@ void update_setpoints();
 /*************************************************************************/
 /* PROJECT #1 - COMPLETE THE FOLLOWING CONTROL PROCEDURES                */
 // gains for the PD controllers EYES
-double Kp_eye = 0.0;
-double Kd_eye = 0.0;
+double Kp_eye = 0.75;
+double Kd_eye = 0.024;
 double passive_Kd_eye = 0.001;
 
 // ARMS 
-double Kp_arm =  0.0;
-double Kd_arm =  0.0;
+double Kp_arm = 4;  //2.8 seems working
+double Kd_arm =  0.93;  //0.8
 double passive_Kd_arm = 1.0;
 
 // BASE TRANSLATION
-double Kp_base_trans = 0.0;
-double Kd_base_trans = 0.0; 
+double Kp_base_trans = 25.0; // to make it move fast enough
+double Kd_base_trans = 14.5; 
 double passive_Kd_base_trans = 2.0;
 
 // BASE ROTATION
-double Kp_base_rot =  0.0;
-double Kd_base_rot =  0.0;
+double Kp_base_rot =  5.0;
+double Kd_base_rot =  1.0;
 double passive_Kd_base_rot = 1.0;
 /*************************************************************************/
 
@@ -56,7 +56,9 @@ double time;
     if (ACTUATE_EYES) {
       // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE EYE
       // USING YOUR GAINS
-      roger->eye_torque[i] = passive_Kd_eye*theta_dot_error;
+            //torque = -k*x - B*x_dot
+            //theta_error * Kp_eye + passive_Kd_eye * theta_dot_error
+      roger->eye_torque[i] = theta_error * Kp_eye + Kd_eye * theta_dot_error;
     } 
     else roger->eye_torque[i] = passive_Kd_eye*theta_dot_error;
   }
@@ -82,13 +84,12 @@ double time;
 
       // tune kp_arm and kd_arm by changing their value using enter_params()
       if (ACTUATE_ARMS) {
-      // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE ARM
-      // USING YOUR GAINS
-	roger->arm_torque[i][j] = passive_Kd_arm * theta_dot_error;
-
+              // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE ARM
+              // USING YOUR GAINS
+          roger->arm_torque[i][j] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
       }
       else {
-	roger->arm_torque[i][j] = passive_Kd_arm * theta_dot_error;
+          roger->arm_torque[i][j] = passive_Kd_arm * theta_dot_error;
       }
     }
   }
@@ -113,7 +114,8 @@ double time;
   if (ACTUATE_BASE) {
     // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE BASE
     // USING YOUR GAINS
-    Fx = - passive_Kd_base_trans * trans_vel;
+    //Fx = - passive_Kd_base_trans * trans_vel;
+    Fx = Kp_base_trans * trans_error - Kd_base_trans * trans_vel;
   }
   else {
     Fx = - passive_Kd_base_trans * trans_vel;
@@ -136,7 +138,7 @@ double time;
   if (ACTUATE_BASE) {
     // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE BASE
     // USING YOUR GAINS
-    Mz = passive_Kd_base_rot * theta_dot_error;
+      Mz = Kp_base_rot * theta_error + Kd_base_rot * theta_dot_error;
   }
   else {
     Mz = passive_Kd_base_rot * theta_dot_error;
