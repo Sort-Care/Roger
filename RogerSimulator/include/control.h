@@ -88,7 +88,9 @@ typedef struct Robot_interface {    /* DO NOT ALTER */
   // SENSORS
   double eye_theta[NEYES];
   double eye_theta_dot[NEYES];
+    
   int image[NEYES][NPIXELS][3]; /* rgb */
+    
   double arm_theta[NARMS][NARM_JOINTS];
   double arm_theta_dot[NARMS][NARM_JOINTS];
   double ext_force[NARMS][2];       /* (fx,fy) force on arm endpoint */

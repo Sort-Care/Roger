@@ -26,8 +26,8 @@ double Kd_eye = 0.04;  //0.04
 double passive_Kd_eye = 0.001;
 
 // ARMS 
-double Kp_arm = 8;  //
-double Kd_arm = 1.4;  //0.8
+double Kp_arm = 4;  //
+double Kd_arm = 1.0;  //0.8
 double passive_Kd_arm = 1.0;
 
 // BASE TRANSLATION
@@ -168,38 +168,44 @@ double time;
     double error[2], rad = 0.0, cur_theta_error = 0.0;
     error[X] = roger->base_setpoint[X] - roger->base_position[X];
     error[Y] = roger->base_setpoint[Y] - roger->base_position[Y];
-    if(fabs(error[X]) > epsilon || fabs(error[Y]) > epsilon){
-        rad = atan(error[Y]/error[X]);
+//    if(fabs(error[X]) > epsilon || fabs(error[Y]) > epsilon){
+    if(error[X] != 0 || error[Y] != 0){
+        //radian error
+        rad = atan2(error[Y], error[X]);
             // printf("First if: rad is %f\n", rad);
         
     }else{
-        cur_theta_error = 0.0;
+        rad = 0.0;
             //printf("Else: rad is %f\n", rad);
     }
         //printf("%f  %f\n", error[X], error[Y]);
+        //printf("%.15f %.15f\n", roger->base_position[X], roger->base_position[Y]);
     
+    cur_theta_error = rad - roger->base_position[THETA];
     
-    if( rad != 0.0){
-        if(error[X] >= 0){
-            cur_theta_error = rad - roger->base_position[THETA];
-        }else if(error[Y] >= 0){
-            cur_theta_error = M_PI + rad - roger->base_position[THETA];
-        }else{
-            cur_theta_error = -M_PI + rad - roger->base_position[THETA];
-        }
-            //printf("error first if: cur is %f\n", cur_theta_error);
-    }//else if(rad != 0.0 && error[X] < 0){
+
+    
+    /* if( rad != 0.0){ */
+    /*     if(error[X] >= 0){ */
+    /*         cur_theta_error = rad - roger->base_position[THETA]; */
+    /*     }else if(error[Y] >= 0){ */
+    /*         cur_theta_error = M_PI + rad - roger->base_position[THETA]; */
+    /*     }else{ */
+    /*         cur_theta_error = -M_PI + rad - roger->base_position[THETA]; */
+    /*     } */
+    /*         //printf("error first if: cur is %f\n", cur_theta_error); */
+    /* } *///else if(rad != 0.0 && error[X] < 0){
         // cur_theta_error = M_PI + rad - roger->base_position[THETA];
         // }
     
     while (cur_theta_error > M_PI) cur_theta_error -= 2.0 * M_PI;
     while (cur_theta_error < -M_PI) cur_theta_error += 2.0 * M_PI;
-    printf("cur is %f\n", cur_theta_error);
+        //printf("cur is %f\n", cur_theta_error);
 
     if (ACTUATE_BASE) {
             // REPLACE THE FOLLOWING LINE WITH THE PD CONTROLLER FOR THE BASE
             // USING YOUR GAINS
-        Mz = Kp_base_rot * cur_theta_error + Kd_base_rot * theta_dot_error;
+        Mz = Kp_base_rot * theta_error + Kd_base_rot * theta_dot_error;
     }
     else {
         Mz = passive_Kd_base_rot * theta_dot_error;
@@ -241,19 +247,19 @@ double time;
         //plot x, y and theta errors in the base position as a function of time
         //x error
 
-        FILE *fp;
-        fp = fopen("./left.dat", "a");
+    /* FILE *fp; */
+    /* fp = fopen("./left.dat", "a"); */
     
-        double error_x = roger->base_setpoint[X] -  roger->base_position[X];
-            //y error
-        double error_y = roger->base_setpoint[Y] - roger->base_position[Y];
-            //theta error
-        double error_theta = roger->base_setpoint[THETA] - roger->base_position[THETA];
+    /* double error_x = roger->base_setpoint[X] -  roger->base_position[X]; */
+    /*     //y error */
+    /* double error_y = roger->base_setpoint[Y] - roger->base_position[Y]; */
+    /*     //theta error */
+    /* double error_theta = roger->base_setpoint[THETA] - roger->base_position[THETA]; */
     
-        while (error_theta > M_PI) error_theta -= 2.0 * M_PI;
-        while (error_theta < -M_PI) error_theta += 2.0 * M_PI;
-        fprintf(fp,"%f\t%f\t%f\t%f\n", time, error_x, -error_y, error_theta);
-        fclose(fp);
+    /* while (error_theta > M_PI) error_theta -= 2.0 * M_PI; */
+    /* while (error_theta < -M_PI) error_theta += 2.0 * M_PI; */
+    /* fprintf(fp,"%f\t%f\t%f\t%f\n", time, error_x, -error_y, error_theta); */
+    /* fclose(fp); */
     
         // integrated wheel torque control
     roger->wheel_torque[LEFT] = baseJT[0][0]*Fx + baseJT[0][1]*Mz;
