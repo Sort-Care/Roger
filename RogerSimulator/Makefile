@@ -36,7 +36,7 @@ ROGERLIB = lib/simulator.a
 
 OFILES1 = xrobot.o \
 	 platform.o \
-         object.o \
+    object.o \
 	 matrix_math.o
 
 XKWOFILES = Xkw/Canvas.o Xkw/Slider.o Xkw/Xkw.o

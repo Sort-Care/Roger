@@ -56,11 +56,19 @@ double time;
         if(result[i] < NPIXELS){//out of sight
             double theta = atan2(result[i]-63.5, 64);
             roger->eyes_setpoint[i] = theta + roger->eye_theta[i];
+            
         }else{
             roger->eyes_setpoint[i] = 0.0;
             continue;
         }
     }
+
+
+    /* FILE *fl; */
+    /* fl = fopen("./v.dat", "a"); */
+    /* fprintf(fl,"%f\t%f\t%f\n", time, roger->eyes_setpoint[0] - roger->eye_theta[0], roger->eyes_setpoint[1] - roger->eye_theta[1]); */
+    /* fclose(fl); */
+   
 }
 
 /************************************************************************/
@@ -71,7 +79,7 @@ Robot* roger;
 // prompt for and read user customized input values
 void project3_enter_params() 
 {
-  printf("Project 4 enter_params called. \n");
+    printf("Project 4 enter_params called. \n");
 }
 
 //function called when the 'visualize' button on the gui is pressed

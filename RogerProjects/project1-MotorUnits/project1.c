@@ -21,13 +21,13 @@ void update_setpoints();
 /*************************************************************************/
 /* PROJECT #1 - COMPLETE THE FOLLOWING CONTROL PROCEDURES                */
 // gains for the PD controllers EYES
-double Kp_eye = 3.5;
-double Kd_eye = 0.04;  //0.04
+double Kp_eye = 5.5;
+double Kd_eye = 0.05;  //0.04
 double passive_Kd_eye = 0.001;
 
 // ARMS 
-double Kp_arm = 4;  //
-double Kd_arm = 1.0;  //0.8
+double Kp_arm = 10;  //
+double Kd_arm = 2.5;  //0.8
 double passive_Kd_arm = 1.0;
 
 // BASE TRANSLATION

@@ -188,4 +188,5 @@ typedef struct _history {
   double base_pos[3];          /* (x,y,theta) */
 } History;
 
+void get_dynamics(double M[NDOF][NDOF], double V[NDOF], double G[NDOF], double F[NDOF]);
 

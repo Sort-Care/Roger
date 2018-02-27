@@ -1090,6 +1090,17 @@ void compute_external_forces()
   //  printf("exiting compute_external_forces()\n"); fflush(stdout);
 }
 
+
+// The wrapper for roger_dynamics
+// the whole-body coupled (8x8) dynamics
+void get_dynamics(M, V, G, F)
+double M[NDOF][NDOF], V[NDOF], G[NDOF], F[NDOF];
+{
+  void roger_dynamics();
+
+  roger_dynamics(&mobile_base, arms, eyes, M, V, G, F);
+}
+
 void copy_object(i, obj)
 int i;
 PolyBall * obj;
