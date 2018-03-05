@@ -79,28 +79,28 @@ double PDLeftEye(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->eyes_setpoint[LEFT] - roger->eye_theta[LEFT];
     theta_dot_error = 0.0 - roger->eye_theta_dot[LEFT];
     if (ACTUATE_EYES){
-        roger->eye_torque[LEFT] = theta_error * Kp_eye + Kd_eye * theta_dot_error;
+        res = theta_error * Kp_eye + Kd_eye * theta_dot_error;
     }
-    else roger->eye_torque[LEFT] = passive_Kd_eye * theta_dot_error;
-    return roger->eye_torque[LEFT];
+    else res = passive_Kd_eye * theta_dot_error;
+    return res;
 }
 
 double PDRightEye(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->eyes_setpoint[RIGHT] - roger->eye_theta[RIGHT];
     theta_dot_error = 0.0 - roger->eye_theta_dot[RIGHT];
     if (ACTUATE_EYES){
-        roger->eye_torque[RIGHT] = theta_error * Kp_eye + Kd_eye * theta_dot_error;
+        res = theta_error * Kp_eye + Kd_eye * theta_dot_error;
     }
-    else roger->eye_torque[RIGHT] = passive_Kd_eye * theta_dot_error;
-    return roger->eye_torque[RIGHT];
+    else res = passive_Kd_eye * theta_dot_error;
+    return res;
 }
 
 /* PROJECT #1.2 - PD CONTROLLER FOR THE ARMS                             */
@@ -149,34 +149,34 @@ double PDLeftShoulder(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->arm_setpoint[LEFT][0] - roger->arm_theta[LEFT][0];
     theta_dot_error = 0.0 - roger->arm_theta_dot[LEFT][0];
     while(theta_error > M_PI) theta_error -= 2.0 * M_PI;
     while(theta_error < - M_PI) theta_error += 2.0 * M_PI;
     if(ACTUATE_ARMS){
-        roger->arm_torque[LEFT][0] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }else{
-        roger->arm_torque[LEFT][0] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }
-    return roger->arm_torque[LEFT][0];
+    return res;
 }
 
 double PDLeftElbow(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->arm_setpoint[LEFT][1] - roger->arm_theta[LEFT][1];
     theta_dot_error = 0.0 - roger->arm_theta_dot[LEFT][1];
     while(theta_error > M_PI) theta_error -= 2.0 * M_PI;
     while(theta_error < - M_PI) theta_error += 2.0 * M_PI;
     if(ACTUATE_ARMS){
-        roger->arm_torque[LEFT][1] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }else{
-        roger->arm_torque[LEFT][1] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }
-    return roger->arm_torque[LEFT][1];
+    return res;
 }
 
 
@@ -184,34 +184,34 @@ double PDRightShoulder(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->arm_setpoint[RIGHT][0] - roger->arm_theta[RIGHT][0];
     theta_dot_error = 0.0 - roger->arm_theta_dot[RIGHT][0];
     while(theta_error > M_PI) theta_error -= 2.0 * M_PI;
     while(theta_error < - M_PI) theta_error += 2.0 * M_PI;
     if(ACTUATE_ARMS){
-        roger->arm_torque[RIGHT][0] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }else{
-        roger->arm_torque[RIGHT][0] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }
-    return roger->arm_torque[RIGHT][0];
+    return res;
 }
 
 double PDRightElbow(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->arm_setpoint[RIGHT][1] - roger->arm_theta[RIGHT][1];
     theta_dot_error = 0.0 - roger->arm_theta_dot[RIGHT][1];
     while(theta_error > M_PI) theta_error -= 2.0 * M_PI;
     while(theta_error < - M_PI) theta_error += 2.0 * M_PI;
     if(ACTUATE_ARMS){
-        roger->arm_torque[RIGHT][1] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }else{
-        roger->arm_torque[RIGHT][1] = theta_error * Kp_arm + Kd_arm * theta_dot_error;
+        res = theta_error * Kp_arm + Kd_arm * theta_dot_error;
     }
-    return roger->arm_torque[RIGHT][1];
+    return res;
 }
 
 
