@@ -39,6 +39,10 @@ double passive_Kd_base_trans = 2.0;
 double Kp_base_rot =  8.0;
 double Kd_base_rot = 4.8;
 double passive_Kd_base_rot = 1.0;
+
+//Uniform Gains
+double Kp = 5.0;
+double Kd = 0.5;
 /*************************************************************************/
 
 /* PROJECT #1.1 - PD CONTROLLER FOR THE EYES                             */
@@ -79,14 +83,14 @@ double PDLeftEye(roger, time)
 Robot * roger;
 double time;
 {
-    double theta_error, theta_dot_error;
+    double theta_error, theta_dot_error, res;
     theta_error = roger->eyes_setpoint[LEFT] - roger->eye_theta[LEFT];
     theta_dot_error = 0.0 - roger->eye_theta_dot[LEFT];
     if (ACTUATE_EYES){
-        roger->eye_torque[LEFT] = theta_error * Kp_eye + Kd_eye * theta_dot_error;
+        res = theta_error * Kp_eye + Kd_eye * theta_dot_error;
     }
-    else roger->eye_torque[LEFT] = passive_Kd_eye * theta_dot_error;
-    return roger->eye_torque[LEFT];
+    else res = passive_Kd_eye * theta_dot_error;
+    return res;
 }
 
 double PDRightEye(roger, time)
@@ -377,6 +381,7 @@ double qdd[8];
     qdd[0] = PDBase_translate(roger,time)/(M_BASE * R_BASE);
     qdd[1] = PDBase_rotate(roger,time)/(M_BASE * R_BASE);
     qdd[2] = PDLeftEye(roger, time)/(M_EYE * L_EYE);
+//    qdd[2] = PDLeftEye(roger, time);
     qdd[3] = PDRightEye(roger, time)/(M_EYE * L_EYE);
     qdd[4] = PDLeftShoulder(roger, time)/(M_ARM1 * L_ARM1);
     qdd[5] = PDLeftElbow(roger, time)/(M_ARM2 * L_ARM2);
@@ -423,6 +428,46 @@ void set_input(roger, time)
 Robot * roger;
 double time;
 {
+    roger->eyes_setpoint[LEFT] = 1;
+    roger->arm_setpoint[LEFT][0] = 1;
+    roger->arm_setpoint[LEFT][1] = 1;
+    roger->arm_setpoint[RIGHT][0] = -1;
+    roger->arm_setpoint[RIGHT][1] = -1;
+    roger->base_setpoint[X] = 0;
+    roger->base_setpoint[Y] = -1;
+    roger->base_setpoint[THETA] = 1;
+    
+}
+
+void record_error(roger, time)
+Robot * roger;
+double time;
+{
+        //record error of left eye, left arms, base theta and base position
+    FILE *record;
+    record = fopen("./simu.dat", "a");
+    double eye_error = roger->eyes_setpoint[LEFT] - roger->eye_theta[LEFT];
+    double shoulder_error = roger->arm_setpoint[LEFT][0] - roger->arm_theta[LEFT][0];
+    double elbow_error = roger->arm_setpoint[LEFT][1] - roger->arm_theta[LEFT][1];
+
+    double error[2];
+    error[X] = roger->base_setpoint[X] - roger->base_position[X];
+    error[Y] = roger->base_setpoint[Y] - roger->base_position[Y];
+    double trans_error = error[X]*cos(roger->base_position[THETA]) +
+        error[Y]*sin(roger->base_position[THETA]);
+    
+    double base_error_theta = roger->base_setpoint[THETA] - roger->base_position[THETA];
+
+    fprintf(record, "%f\t%f\t%f\t%f\t%f\t%f\n",
+            time,
+            eye_error,
+            shoulder_error,
+            elbow_error,
+            trans_error,
+            base_error_theta
+            );
+
+    fclose(record);
     
 }
 
@@ -436,6 +481,8 @@ Robot * roger;
 double time;
 {
     update_setpoints(roger); // check_GUI_inputs(roger)
+//    set_input(roger,time);
+    
 
         // turn setpoint references into torques
 //    PDController_eyes(roger, time);
@@ -457,6 +504,8 @@ double time;
         //get dynamics of Roger
     get_dynamics(M, V, G, F);
     
+    
+    
         //Initialize accelerationg column
     double q_double_dot[8];
     initialize_q_double_dot(roger,time,q_double_dot);
@@ -469,6 +518,8 @@ double time;
         //+ F
     matrix_add(8, 1, torques, F, torques);
     decouple(roger, time, torques);
+//    record_error(roger, time);
+
     
 }
 
