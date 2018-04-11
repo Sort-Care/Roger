@@ -2137,10 +2137,13 @@ Observation obs;
   double dx, dy, mag, eigenvalue[2], eigenvector[2][2];
   double ref_w[4], ref_b[4], wTb[4][4], bTw[4][4];
   double theta, dx0, dy0, dx1, dy1;
+  printf("here\n");
+  
 
   // cov = [A  B] => det |JJt| = a(lambda)^2 + b(lambda) + c
   //       [B  C]
   a = 1.0;
+  
   b = -(obs.cov[0][0] + obs.cov[1][1]);
   c = obs.cov[0][0] * obs.cov[1][1] - obs.cov[1][0] * obs.cov[0][1];
 
@@ -2162,6 +2165,8 @@ Observation obs;
     eigenvalue[1] = sqrt(root[1]);
     eigenvector[1][0] = -eigenvector[0][1];
     eigenvector[1][1] = eigenvector[0][0];
+
+    
   }
   // when ball is directly in front of Roger:
   else{
@@ -2224,6 +2229,11 @@ Observation obs;
     dx0 = dx1;
     dy0 = dy1;
   }
+  printf("value:%f\t%f\n vector:%f\t%f\n%f\t%f\n", eigenvalue[0],eigenvalue[1],
+         eigenvector[0][0],eigenvector[0][1],
+         eigenvector[1][0], eigenvector[1][1]);
+  
+  
 }
 
 #define STEP         0.01

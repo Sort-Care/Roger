@@ -38,8 +38,7 @@
 
 /***** CONTROL RETURN STATUS **********************************************/
 enum {
-  UNKNOWN = 0,
-  NO_REFERENCE,
+  NO_REFERENCE = 0,
   TRANSIENT,
   CONVERGED
 };

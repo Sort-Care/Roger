@@ -308,7 +308,7 @@ Eye eyes[NEYES];
   // base - elements 0 and 1
   gForce[0]=(mobile_base->wheel_torque[LEFT]+mobile_base->wheel_torque[RIGHT])
     - V[0] - G[0] - F[0];
-  gForce[1]=R_BASE * (mobile_base->wheel_torque[RIGHT]
+  gForce[1]=R_AXLE * (mobile_base->wheel_torque[RIGHT]
 		      - mobile_base->wheel_torque[LEFT]) - V[1] - G[1] - F[1];
   // left eye - element 2
   gForce[2]=eyes[LEFT].torque - V[2] - G[2] - F[2];
